@@ -93,6 +93,8 @@ def browser_kwargs(prefix: str, proxy: str = None) -> dict:
     default_headless = "1" if prefix == "TURNSTILE" else "0"
     kw = {"humanize": True,
           "headless": os.getenv("BROWSER_HEADLESS", default_headless) != "0"}
+    # Railway/container compat: avoid /dev/shm exhaustion + no sandbox
+    kw["args"] = ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"]
     if proxy:
         kw["proxy"] = proxy
     if os.getenv(f"{prefix}_GEOIP") == "1":
